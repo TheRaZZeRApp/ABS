@@ -1,5 +1,6 @@
 package de.therazzerapp.abs;
 
+import de.therazzerapp.abs.manager.ErrorManager;
 import de.therazzerapp.abs.manager.MitarbeiterManager;
 import de.therazzerapp.abs.content.loader.MitarbeiterLoader;
 
@@ -14,14 +15,18 @@ import java.io.File;
  * @since <version>
  */
 public class ABS {
-    public static void main(String[] args) {
+    private static String[] args;
+    public static void main(String[] a) {
+        args = a;
         if (args.length <= 0){
-            //System.exit(0);
+            System.exit(0);
         }
-        //String pdfFile = args[0];
 
-        //Convert PDF to TXT
-        Runtime rt = Runtime.getRuntime();
+        File file = new File(args[0]);
+        if (!file.exists()){
+            ErrorManager.writeError("Die Datei: \"" + ABS.getArgs()[0] + "\" wurde nicht gefunden!");
+            System.exit(0);
+        }
 
         /*
         try {
@@ -31,12 +36,12 @@ public class ABS {
         }
         */
 
-        //Set<String> content = FileReader.getFileContent(new File(args[0]));
-        File file = new File("C:\\Users\\Computer\\Desktop\\Script\\Script\\Belastung.txt");
-
         MitarbeiterManager.load(MitarbeiterLoader.readContent(FileReader.getFileContent(file)));
+        MitarbeiterManager.export(args[0]);
         MitarbeiterManager.createMitarbeiter();
     }
 
-
+    public static String[] getArgs() {
+        return args;
+    }
 }

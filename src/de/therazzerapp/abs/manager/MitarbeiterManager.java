@@ -1,11 +1,11 @@
 package de.therazzerapp.abs.manager;
 
+import de.therazzerapp.abs.content.CSVFile;
 import de.therazzerapp.abs.content.Mitarbeiter;
 import de.therazzerapp.abs.content.MonatType;
+import de.therazzerapp.abs.content.saver.CSVSaver;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <description>
@@ -100,6 +100,47 @@ public class MitarbeiterManager {
         for (Mitarbeiter mitarbeiter : employees) {
             System.out.println(mitarbeiter.createMitarbeiter());
         }
+    }
+
+    public static void export(String path){
+        orderByName();
+        List<String> header = new LinkedList<>();
+        header.add("Nachname");
+        header.add("Vorname");
+        for (MonatType monatType : MonatType.values()) {
+            if (monatType == MonatType.ERROR || monatType == MonatType.MAERZ){
+                continue;
+            }
+            header.add(monatType.getName());
+        }
+
+        List<List<String>> content = new LinkedList<>();
+
+
+
+
+        for (Mitarbeiter employee : employees) {
+            List<String> e = new LinkedList<>();
+
+            e.add(employee.getNachname());
+            e.add(employee.getVorname());
+
+            for (int i = 0; i < header.size(); i++) {
+                e.add("0");
+            }
+
+
+            for (Map<MonatType, String> monatTypeStringMap : employee.getArbeiterbelastung()) {
+                MonatType monatType = monatTypeStringMap.keySet().iterator().next();
+                int j = header.indexOf(monatType.getName());
+                e.add(j,monatTypeStringMap.values().iterator().next());
+            }
+            content.add(e);
+        }
+
+
+        CSVFile csvFile = new CSVFile(header,content);
+        CSVSaver.save(csvFile,path);
     }
 
 }

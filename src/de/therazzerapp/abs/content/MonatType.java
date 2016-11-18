@@ -10,8 +10,8 @@ public enum MonatType {
 
     JANUAR("Januar"),
     FEBRUAR("Februar"),
-    MÄRZ("März"),
-    MAERZ("März"),
+    MÄRZ("M\u00e4rz"),
+    MAERZ("M\u00e4rz"),
     APRIL("April"),
     MAI("Mai"),
     JUNI("Juni"),
