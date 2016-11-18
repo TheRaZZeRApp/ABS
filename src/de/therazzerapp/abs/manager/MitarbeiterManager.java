@@ -116,28 +116,23 @@ public class MitarbeiterManager {
 
         List<List<String>> content = new LinkedList<>();
 
-
-
-
         for (Mitarbeiter employee : employees) {
             List<String> e = new LinkedList<>();
 
             e.add(employee.getNachname());
             e.add(employee.getVorname());
 
-            for (int i = 0; i < header.size(); i++) {
+            for (int i = 0; i < header.size() - 2; i++) {
                 e.add("0");
             }
-
 
             for (Map<MonatType, String> monatTypeStringMap : employee.getArbeiterbelastung()) {
                 MonatType monatType = monatTypeStringMap.keySet().iterator().next();
                 int j = header.indexOf(monatType.getName());
-                e.add(j,monatTypeStringMap.values().iterator().next());
+                e.set(j,monatTypeStringMap.values().iterator().next());
             }
             content.add(e);
         }
-
 
         CSVFile csvFile = new CSVFile(header,content);
         CSVSaver.save(csvFile,path);

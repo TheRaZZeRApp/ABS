@@ -6,6 +6,8 @@ import de.therazzerapp.abs.content.loader.MitarbeiterLoader;
 
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 
 /**
@@ -28,13 +30,19 @@ public class ABS {
             System.exit(0);
         }
 
-        /*
+        Runtime rt = Runtime.getRuntime();
         try {
-            Process process = rt.exec("pdftotxt.exe");
-        } catch (IOException e) {
-            e.printStackTrace();
+            String path = ABS.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            path.replaceAll("ABS.jar","");
+            path.replaceAll("/C:/","C:/");
+            try {
+                Process process = rt.exec(path + "pdftotxt.exe -raw -nopgbrk " + args[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (URISyntaxException e) {
+
         }
-        */
 
         MitarbeiterManager.load(MitarbeiterLoader.readContent(FileReader.getFileContent(file)));
         MitarbeiterManager.export(args[0]);
