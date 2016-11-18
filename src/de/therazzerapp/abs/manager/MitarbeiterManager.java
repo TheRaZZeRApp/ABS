@@ -3,6 +3,7 @@ package de.therazzerapp.abs.manager;
 import de.therazzerapp.abs.content.Mitarbeiter;
 import de.therazzerapp.abs.content.MonatType;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -13,26 +14,52 @@ import java.util.Set;
  * @since <version>
  */
 public class MitarbeiterManager {
-    private static Set<Mitarbeiter> mitarbeiters = new LinkedHashSet<>();
+    private static Set<Mitarbeiter> employees = new LinkedHashSet<>();
 
     public static void load(Set<Mitarbeiter> m){
-        mitarbeiters = m;
+        employees = m;
+        orderByName();
     }
 
-    public static void addMitarbeiter(Mitarbeiter mitarbeiter){
-        if (mitarbeiters.contains(mitarbeiter)){
-            //todo mitarbeiter erweitern
+    private static void orderByName(){
+        //todo order by name
+
+    }
+
+    public static void updateMitarbeiter(Mitarbeiter mitarbeiter){
+        if(!employees.contains(mitarbeiter)){
+            employees.add(mitarbeiter);
+        } else if (containsMitarbeiter(mitarbeiter.getNachname())){
+
+        }
+
+        orderByName();
+    }
+
+    public static boolean containsMitarbeiter(String name){
+        if (getByName(name) == null){
+            return false;
         } else {
-            mitarbeiters.add(mitarbeiter);
+            return true;
         }
     }
 
+    public static void addMitarbeiter(Mitarbeiter mitarbeiter){
+        if (employees.contains(mitarbeiter)){
+            //todo mitarbeiter erweitern
+        } else {
+            employees.add(mitarbeiter);
+        }
+        orderByName();
+    }
+
     public static void removeMitarbeiter(Mitarbeiter mitarbeiter){
-        mitarbeiters.remove(mitarbeiter);
+        employees.remove(mitarbeiter);
+        orderByName();
     }
 
     public static boolean containsMitarbeiter(Mitarbeiter mitarbeiter){
-        return mitarbeiters.contains(mitarbeiter);
+        return employees.contains(mitarbeiter);
     }
 
     /**
@@ -42,7 +69,7 @@ public class MitarbeiterManager {
      */
     public static Set<Mitarbeiter> getByFirstMonth(MonatType monatType){
         Set<Mitarbeiter> m = new LinkedHashSet<>();
-        for (Mitarbeiter mitarbeiter : mitarbeiters) {
+        for (Mitarbeiter mitarbeiter : employees) {
             if (mitarbeiter.getFirstMont().equals(monatType)){
                 m.add(mitarbeiter);
             }
@@ -52,7 +79,7 @@ public class MitarbeiterManager {
 
 
     public static Mitarbeiter getByName(String name){
-        for (Mitarbeiter mitarbeiter : mitarbeiters) {
+        for (Mitarbeiter mitarbeiter : employees) {
             if (mitarbeiter.getNachname().equals(name)){
                 return mitarbeiter;
             }
@@ -61,7 +88,7 @@ public class MitarbeiterManager {
     }
 
     public static Mitarbeiter getByVorname(String name){
-        for (Mitarbeiter mitarbeiter : mitarbeiters) {
+        for (Mitarbeiter mitarbeiter : employees) {
             if (mitarbeiter.getVorname().equals(name)){
                 return mitarbeiter;
             }
@@ -70,7 +97,7 @@ public class MitarbeiterManager {
     }
 
     public static void createMitarbeiter(){
-        for (Mitarbeiter mitarbeiter : mitarbeiters) {
+        for (Mitarbeiter mitarbeiter : employees) {
             System.out.println(mitarbeiter.createMitarbeiter());
         }
     }
