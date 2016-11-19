@@ -1,5 +1,6 @@
 package de.therazzerapp.abs;
 
+import de.therazzerapp.abs.content.PDFtoTXTThread;
 import de.therazzerapp.abs.gui.StartUI;
 import de.therazzerapp.abs.manager.ErrorManager;
 import de.therazzerapp.abs.manager.MitarbeiterManager;
@@ -29,36 +30,46 @@ public class ABS {
         args = a;
         if (args.length <= 0){
             StartUI.run();
+        } else {
+            boolean keepTXT = false;
+            if (args.length > 1){
+                if (args[1].equals("true")){
+                    keepTXT = true;
+                }
+            }
+
+            File file = new File(args[0]);
+            if (!file.exists()){
+                ErrorManager.writeError("Die Datei: \"" + ABS.getArgs()[0] + "\" wurde nicht gefunden!");
+                System.exit(0);
+            }
+
+            if (!Utils.pdftotxtExists()){
+                ErrorManager.writeError("pdftotext.exe wurde nicht gefunden");
+                System.exit(0);
+            }
+
+            run(file, keepTXT);
         }
-
-        File file = new File(args[0]);
-        if (!file.exists()){
-            ErrorManager.writeError("Die Datei: \"" + ABS.getArgs()[0] + "\" wurde nicht gefunden!");
-            System.exit(0);
-        }
-
-        run(file);
-
     }
 
-    public static void run(File file){
-        Runtime rt = Runtime.getRuntime();
+    public static void run(File file, boolean keepTXT){
+
+        PDFtoTXTThread pdFtoTXTThread = new PDFtoTXTThread(file);
+        pdFtoTXTThread.start();
+        File txt = new File(file.getAbsolutePath().replaceAll("\\.pdf",".txt"));
         try {
-            String path = ABS.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-            path = path.replaceAll("[^\\/]+\\.jar","");
-            path = path.replaceFirst("/","");
-            try {
-                Process process = rt.exec(path + "pdftotext.exe -raw -nopgbrk " + file.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (URISyntaxException ignored) {
+            pdFtoTXTThread.join();
+
+            MitarbeiterManager.load(MitarbeiterLoader.readContent(FileReader.getFileContent(txt)));
+            MitarbeiterManager.exportCSV(txt.getAbsolutePath());
+        } catch (InterruptedException ignored) {
 
         }
 
-        MitarbeiterManager.load(MitarbeiterLoader.readContent(FileReader.getFileContent(file)));
-        MitarbeiterManager.exportCSV(file.getAbsolutePath().replaceAll("\\.pdf",".txt"));
-        MitarbeiterManager.createMitarbeiter();
+        if (!keepTXT){
+            txt.delete();
+        }
     }
 
     public static String[] getArgs() {

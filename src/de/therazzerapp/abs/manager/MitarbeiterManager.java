@@ -16,6 +16,10 @@ import java.util.*;
 public class MitarbeiterManager {
     private static Set<Mitarbeiter> employees = new LinkedHashSet<>();
 
+    public static int mitarbeiterSize(){
+        return employees.size();
+    }
+
     public static void load(Set<Mitarbeiter> m){
         employees = m;
         orderByName();
