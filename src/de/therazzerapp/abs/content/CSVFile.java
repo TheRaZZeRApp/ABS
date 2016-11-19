@@ -13,7 +13,6 @@ public class CSVFile {
     private List<String> header;
     private List<List<String>> content;
 
-
     public CSVFile(List<String> header, List<List<String>> content) {
         this.header = header;
         this.content = content;
@@ -37,7 +36,6 @@ public class CSVFile {
             z.add(list.get(spalte));
         }
         return z;
-
     }
 
     public List<String> getZeile(int zeile){

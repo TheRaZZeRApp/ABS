@@ -22,40 +22,71 @@ public class MitarbeiterManager {
     }
 
     private static void orderByName(){
-        //todo order by name
+        List<String> names = new LinkedList<>();
+        List<Mitarbeiter> m = new LinkedList<>();
 
+        for (Mitarbeiter employee : employees) {
+            names.add(employee.getNachname());
+        }
+
+        Collections.sort(names);
+
+        for (String name : names) {
+            m.add(getByName(name));
+        }
+
+        employees.clear();
+        employees.addAll(m);
+    }
+
+    public static void updateMitarbeiter(List<Mitarbeiter> mitarbeiters){
+        for (Mitarbeiter mitarbeiter : mitarbeiters) {
+            updateMitarbeiter(mitarbeiter);
+        }
     }
 
     public static void updateMitarbeiter(Mitarbeiter mitarbeiter){
-        if(!employees.contains(mitarbeiter)){
-            employees.add(mitarbeiter);
-        } else if (containsMitarbeiter(mitarbeiter.getNachname())){
-
+        Mitarbeiter m = null;
+        for (Mitarbeiter employee : employees) {
+            if (employee.getNachname().equals(mitarbeiter.getNachname())){
+                m = employee;
+                employees.remove(employee);
+            }
         }
-
-        orderByName();
+        if (m == null){
+            addMitarbeiter(mitarbeiter);
+        } else {
+            if (mitarbeiter.getArbeiterbelastung().size() > m.getArbeiterbelastung().size()){
+                //todo update
+            } else if (mitarbeiter.getArbeiterbelastung().size() == m.getArbeiterbelastung().size()){
+                addMitarbeiter(mitarbeiter);
+            }
+        }
     }
 
     public static boolean containsMitarbeiter(String name){
-        if (getByName(name) == null){
-            return false;
-        } else {
-            return true;
+        return getByName(name) != null;
+    }
+
+    public static void addMitarbeiter(List<Mitarbeiter> mitarbeiters){
+        for (Mitarbeiter mitarbeiter : mitarbeiters) {
+            addMitarbeiter(mitarbeiter);
         }
     }
 
     public static void addMitarbeiter(Mitarbeiter mitarbeiter){
         if (employees.contains(mitarbeiter)){
-            //todo mitarbeiter erweitern
+            return;
+        } else if (getByName(mitarbeiter.getNachname()) != null){
+            updateMitarbeiter(mitarbeiter);
         } else {
             employees.add(mitarbeiter);
+            orderByName();
         }
-        orderByName();
     }
 
     public static void removeMitarbeiter(Mitarbeiter mitarbeiter){
         employees.remove(mitarbeiter);
-        orderByName();
     }
 
     public static boolean containsMitarbeiter(Mitarbeiter mitarbeiter){
@@ -102,7 +133,7 @@ public class MitarbeiterManager {
         }
     }
 
-    public static void export(String path){
+    public static void exportCSV(String path){
         orderByName();
         List<String> header = new LinkedList<>();
         header.add("Nachname");

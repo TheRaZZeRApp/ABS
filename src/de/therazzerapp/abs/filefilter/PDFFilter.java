@@ -17,6 +17,6 @@ public class PDFFilter extends FileFilter{
 
     @Override
     public String getDescription() {
-        return "Pdf File";
+        return "PDF Datei";
     }
 }

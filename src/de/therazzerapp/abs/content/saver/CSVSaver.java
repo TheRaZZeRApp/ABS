@@ -14,8 +14,7 @@ import java.util.List;
  */
 public class CSVSaver {
     public static void save(CSVFile csvFile, String path){
-        File file = new File(path + ".csv");
-        FileSaver.save(convertCSV(csvFile),file);
+        FileSaver.save(convertCSV(csvFile),new File(path + ".csv"));
     }
 
     private static String convertCSV(CSVFile csvFile){
@@ -34,8 +33,8 @@ public class CSVSaver {
         for (String h : csvFile.getHeader()) {
             stringBuilder.append(h + ";");
         }
-
         stringBuilder.replace(stringBuilder.length()-1,stringBuilder.length(),"\n");
+
         for (List<String> strings : csvFile.getContentList()) {
             for (String string : strings) {
                 stringBuilder.append(string + ";");

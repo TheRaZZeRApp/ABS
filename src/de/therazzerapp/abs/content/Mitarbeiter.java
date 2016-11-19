@@ -21,11 +21,10 @@ public class Mitarbeiter {
 
     private String convertBelastung(){
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < arbeiterbelastung.size(); i++) {
-            for (Map.Entry<MonatType, String> monatTypeStringEntry : arbeiterbelastung.get(i).entrySet()) {
-                sb.append(monatTypeStringEntry.getKey().getName() + ": " + monatTypeStringEntry.getValue()+ " ");
+        for (Map<MonatType, String> anArbeiterbelastung : arbeiterbelastung) {
+            for (Map.Entry<MonatType, String> monatTypeStringEntry : anArbeiterbelastung.entrySet()) {
+                sb.append(monatTypeStringEntry.getKey().getName() + ": " + monatTypeStringEntry.getValue() + " ");
             }
-
         }
         return sb.toString();
     }

@@ -12,8 +12,8 @@ import java.util.List;
  * @author The RaZZeR App <rezzer101@googlemail.com; e-mail@therazzerapp.de>
  * @since <version>
  */
-public class FileReader {
-    public static List<String> getFileContent(File file){
+class FileReader {
+    static List<String> getFileContent(File file){
         List<String> contentList = new LinkedList<>();
         BufferedReader br;
         InputStream is = null;
@@ -28,13 +28,13 @@ public class FileReader {
                 contentList.add(line);
                 line = br.readLine();
             }
-        } catch (IOException ioe) {
+        } catch (IOException ignored) {
         } finally {
             try {
                 if (is != null) {
                     is.close();
                 }
-            } catch (IOException ioe) {
+            } catch (IOException ignored) {
             }
         }
         return contentList;
