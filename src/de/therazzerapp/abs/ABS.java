@@ -41,11 +41,13 @@ public class ABS {
             File file = new File(args[0]);
             if (!file.exists()){
                 ErrorManager.writeError("Die Datei: \"" + ABS.getArgs()[0] + "\" wurde nicht gefunden!");
+                System.out.println("Die Datei: \"" + ABS.getArgs()[0] + "\" wurde nicht gefunden!");
                 System.exit(0);
             }
 
             if (!Utils.pdftotxtExists()){
                 ErrorManager.writeError("pdftotext.exe wurde nicht gefunden");
+                System.out.println("pdftotext.exe wurde nicht gefunden");
                 System.exit(0);
             }
 
@@ -54,6 +56,12 @@ public class ABS {
     }
 
     public static void run(File file, boolean keepTXT){
+
+        if (!file.getName().endsWith(".pdf")){
+            System.out.println("\nError: Angegebene Datei ist keine PDF");
+            ErrorManager.writeError("Angegebene Datei ist keine PDF");
+            return;
+        }
 
         PDFtoTXTThread pdFtoTXTThread = new PDFtoTXTThread(file);
         pdFtoTXTThread.start();

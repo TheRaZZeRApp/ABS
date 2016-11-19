@@ -171,6 +171,9 @@ public class MitarbeiterManager {
 
         CSVFile csvFile = new CSVFile(header,content);
         CSVSaver.save(csvFile,path);
+
+        System.out.println("Es wurden: " + content.size() + " Mitarbeiter aufgelistet.");
+
     }
 
 }

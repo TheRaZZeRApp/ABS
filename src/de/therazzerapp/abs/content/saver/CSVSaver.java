@@ -14,7 +14,9 @@ import java.util.List;
  */
 public class CSVSaver {
     public static void save(CSVFile csvFile, String path){
-        FileSaver.save(convertCSV(csvFile),new File(path.replaceAll("\\.txt","") + ".csv"));
+        path = path.replaceAll("\\.txt",".csv");
+        FileSaver.save(convertCSV(csvFile),new File(path));
+        System.out.println("Tabelle erstellt: " + path);
     }
 
     private static String convertCSV(CSVFile csvFile){

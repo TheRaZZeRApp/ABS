@@ -6,10 +6,12 @@ import de.therazzerapp.abs.filefilter.PDFFilter;
 import de.therazzerapp.abs.manager.MitarbeiterManager;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * <description>
@@ -28,6 +30,7 @@ public class StartUI {
     private JPanel infoPanel;
     private JLabel mitarbeiterCount;
     private JButton backButton;
+    private JLabel tableName;
     private static JFrame frame = new JFrame("StartUI");
 
     public static void run() {
@@ -37,8 +40,11 @@ public class StartUI {
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        frame.setSize(472,270);
+        frame.setSize(472,290);
         frame.setTitle("ISW MB-Skript v." + ABS.getVersion() + " by Paul Koenig");
+
+        URL resource1 = ABS.class.getResource( "images/icon_128.png" );
+        frame.setIconImage(Toolkit.getDefaultToolkit().getImage(resource1));
     }
 
     public StartUI() {
@@ -67,6 +73,7 @@ public class StartUI {
                 openPanel.setVisible(false);
                 infoPanel.setVisible(true);
                 mitarbeiterCount.setText(MitarbeiterManager.mitarbeiterSize() + "");
+                tableName.setText(chooser.getSelectedFile().getPath().replaceAll("\\.pdf",".csv"));
             }
         });
 
@@ -76,6 +83,7 @@ public class StartUI {
                 openPanel.setVisible(true);
                 infoPanel.setVisible(false);
                 mitarbeiterCount.setText("");
+                tableName.setText("");
             }
         });
     }
