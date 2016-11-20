@@ -21,17 +21,25 @@ public class MitarbeiterLoader {
         String vorname = "";
         String belastung = "";
         String monate = "";
+        String korrekturen = "";
+        int mitarbeiterNr = 0;
         Matcher matcher;
 
         Set<Mitarbeiter> m = new LinkedHashSet<>();
 
         for (String s : content) {
 
-            matcher = Pattern.compile("Name: (?<name>.*), (?<vorname>.*) Pers.Nr.:").matcher(s);
+            matcher = Pattern.compile("Name: (?<name>.*), (?<vorname>.*)Pers\\.Nr\\.: (?<mnr>[0-9]*)").matcher(s);
 
             while (matcher.find()){
                 nachname = matcher.group("name");
                 vorname = matcher.group("vorname");
+                mitarbeiterNr = Integer.parseInt(matcher.group("mnr"));
+            }
+
+            matcher = Pattern.compile("\\(korrigiert im\\) (?<korrekturen>.*)").matcher(s);
+            while (matcher.find()){
+                korrekturen = matcher.group("korrekturen");
             }
 
             matcher = Pattern.compile("Arbeitgeberbelastung (?<belastungen>.*,.+)").matcher(s);
@@ -48,8 +56,13 @@ public class MitarbeiterLoader {
 
             matcher = Pattern.compile("Industrieschutz Walter GmbH").matcher(s);
             if (matcher.find()){
-                m.add(new Mitarbeiter(nachname,vorname,formatBelastung(belastung,monate)));
+                m.add(new Mitarbeiter(nachname,vorname,mitarbeiterNr,formatBelastung(belastung,monate),korrekturen));
+                korrekturen = "";
             }
+        }
+
+        for (Mitarbeiter mitarbeiter : m) {
+            System.out.println(mitarbeiter.createMitarbeiter());
         }
 
         return m;

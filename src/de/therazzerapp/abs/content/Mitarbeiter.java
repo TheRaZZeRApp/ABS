@@ -11,12 +11,20 @@ import java.util.*;
 public class Mitarbeiter {
     private String nachname;
     private String vorname;
+    private int mitarbeiterNr;
     private List<Map<MonatType, String>> arbeiterbelastung = new LinkedList<>();
+    private String korrekturen;
 
-    public Mitarbeiter(String nachname, String vorname, List<Map<MonatType, String>> arbeiterbelastung) {
+    public Mitarbeiter(String nachname, String vorname, int mitarbeiterNr, List<Map<MonatType, String>> arbeiterbelastung, String korrekturen) {
         this.nachname = nachname;
         this.vorname = vorname;
+        this.mitarbeiterNr = mitarbeiterNr;
         this.arbeiterbelastung = arbeiterbelastung;
+        this.korrekturen = korrekturen;
+    }
+
+    public int getMitarbeiterNr() {
+        return mitarbeiterNr;
     }
 
     private String convertBelastung(){
@@ -46,6 +54,14 @@ public class Mitarbeiter {
     }
 
     public String createMitarbeiter(){
-        return nachname + ", " + vorname + ", " + convertBelastung();
+        return mitarbeiterNr + ", " + nachname + ", " + vorname + ", Monate: " + arbeiterbelastung.size();
+    }
+
+    public String getID(){
+        return nachname+ "," + vorname + "," + mitarbeiterNr;
+    }
+
+    public String getKorrekturen() {
+        return korrekturen;
     }
 }

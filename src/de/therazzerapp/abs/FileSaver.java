@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 public class FileSaver {
     public static void save(String content, File file){
         try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file), "Cp1252");
             file.createNewFile();
             outputStreamWriter.write(content);
             outputStreamWriter.close();

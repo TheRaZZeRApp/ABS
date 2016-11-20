@@ -30,13 +30,13 @@ public class MitarbeiterManager {
         List<Mitarbeiter> m = new LinkedList<>();
 
         for (Mitarbeiter employee : employees) {
-            names.add(employee.getNachname());
+            names.add(employee.getNachname() + "," + employee.getVorname() + "," + employee.getMitarbeiterNr());
         }
 
         Collections.sort(names);
 
-        for (String name : names) {
-            m.add(getByName(name));
+        for (String id : names) {
+            m.add(getById(id));
         }
 
         employees.clear();
@@ -131,6 +131,15 @@ public class MitarbeiterManager {
         return null;
     }
 
+    public static Mitarbeiter getById(String id){
+        for (Mitarbeiter employee : employees) {
+            if (employee.getID().equalsIgnoreCase(id)){
+                return employee;
+            }
+        }
+        return null;
+    }
+
     public static void createMitarbeiter(){
         for (Mitarbeiter mitarbeiter : employees) {
             System.out.println(mitarbeiter.createMitarbeiter());
@@ -142,12 +151,14 @@ public class MitarbeiterManager {
         List<String> header = new LinkedList<>();
         header.add("Nachname");
         header.add("Vorname");
+        header.add("Pers.Nr.");
         for (MonatType monatType : MonatType.values()) {
             if (monatType == MonatType.ERROR || monatType == MonatType.MAERZ){
                 continue;
             }
             header.add(monatType.getName());
         }
+        header.add("Korrekturen");
 
         List<List<String>> content = new LinkedList<>();
 
@@ -156,8 +167,9 @@ public class MitarbeiterManager {
 
             e.add(employee.getNachname());
             e.add(employee.getVorname());
+            e.add(employee.getMitarbeiterNr() + "");
 
-            for (int i = 0; i < header.size() - 2; i++) {
+            for (int i = 0; i < MonatType.values().length-2; i++) {
                 e.add("0");
             }
 
@@ -166,6 +178,7 @@ public class MitarbeiterManager {
                 int j = header.indexOf(monatType.getName());
                 e.set(j,monatTypeStringMap.values().iterator().next());
             }
+            e.add(employee.getKorrekturen());
             content.add(e);
         }
 
