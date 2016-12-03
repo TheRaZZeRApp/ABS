@@ -3,13 +3,11 @@ package de.therazzerapp.abs;
 import de.therazzerapp.abs.content.PDFtoTXTThread;
 import de.therazzerapp.abs.gui.StartUI;
 import de.therazzerapp.abs.manager.ErrorManager;
-import de.therazzerapp.abs.manager.MitarbeiterManager;
-import de.therazzerapp.abs.content.loader.MitarbeiterLoader;
+import de.therazzerapp.abs.manager.EmployeeManager;
+import de.therazzerapp.abs.content.loader.EmployeeLoader;
 
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 
 /**
@@ -69,8 +67,8 @@ public class ABS {
         try {
             pdFtoTXTThread.join();
 
-            MitarbeiterManager.load(MitarbeiterLoader.readContent(FileReader.getFileContent(txt)));
-            MitarbeiterManager.exportCSV(txt.getAbsolutePath());
+            EmployeeManager.load(EmployeeLoader.readContent(FileReader.getFileContent(txt)));
+            EmployeeManager.exportCSV(txt.getAbsolutePath());
         } catch (InterruptedException ignored) {
 
         }

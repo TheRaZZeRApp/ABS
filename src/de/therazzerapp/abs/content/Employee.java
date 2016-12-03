@@ -8,14 +8,14 @@ import java.util.*;
  * @author The RaZZeR App <rezzer101@googlemail.com; e-mail@therazzerapp.de>
  * @since <version>
  */
-public class Mitarbeiter {
+public class Employee {
     private String nachname;
     private String vorname;
     private int mitarbeiterNr;
-    private List<Map<MonatType, String>> arbeiterbelastung = new LinkedList<>();
+    private List<Map<MonthType, String>> arbeiterbelastung = new LinkedList<>();
     private String korrekturen;
 
-    public Mitarbeiter(String nachname, String vorname, int mitarbeiterNr, List<Map<MonatType, String>> arbeiterbelastung, String korrekturen) {
+    public Employee(String nachname, String vorname, int mitarbeiterNr, List<Map<MonthType, String>> arbeiterbelastung, String korrekturen) {
         this.nachname = nachname;
         this.vorname = vorname;
         this.mitarbeiterNr = mitarbeiterNr;
@@ -23,21 +23,25 @@ public class Mitarbeiter {
         this.korrekturen = korrekturen;
     }
 
-    public int getMitarbeiterNr() {
-        return mitarbeiterNr;
-    }
-
     private String convertBelastung(){
         StringBuilder sb = new StringBuilder();
-        for (Map<MonatType, String> anArbeiterbelastung : arbeiterbelastung) {
-            for (Map.Entry<MonatType, String> monatTypeStringEntry : anArbeiterbelastung.entrySet()) {
+        for (Map<MonthType, String> anArbeiterbelastung : arbeiterbelastung) {
+            for (Map.Entry<MonthType, String> monatTypeStringEntry : anArbeiterbelastung.entrySet()) {
                 sb.append(monatTypeStringEntry.getKey().getName() + ": " + monatTypeStringEntry.getValue() + " ");
             }
         }
         return sb.toString();
     }
 
-    public MonatType getFirstMont(){
+    public String createMitarbeiter(){
+        return mitarbeiterNr + ", " + nachname + ", " + vorname + ", Monate: " + arbeiterbelastung.size();
+    }
+
+    public int getMNr() {
+        return mitarbeiterNr;
+    }
+
+    public MonthType getFirstMont(){
         return arbeiterbelastung.get(0).keySet().iterator().next();
     }
 
@@ -49,12 +53,12 @@ public class Mitarbeiter {
         return vorname;
     }
 
-    public List<Map<MonatType, String>> getArbeiterbelastung() {
+    public List<Map<MonthType, String>> getArbeiterbelastung() {
         return arbeiterbelastung;
     }
 
-    public String getMonthBelatungs(MonatType month){
-        for (Map<MonatType, String> monatTypeStringMap : arbeiterbelastung) {
+    public String getMonthBelatungs(MonthType month){
+        for (Map<MonthType, String> monatTypeStringMap : arbeiterbelastung) {
             if (monatTypeStringMap.keySet().iterator().next() == month){
                 return monatTypeStringMap.get(month);
             }
@@ -62,7 +66,11 @@ public class Mitarbeiter {
         return "0,0";
     }
 
-    public boolean hasMonth(MonatType month){
+    public String getID(){
+        return nachname+ "," + vorname + "," + mitarbeiterNr;
+    }
+
+    public boolean hasMonth(MonthType month){
         switch (getMonthBelatungs(month)){
             case "":
                 return false;
@@ -75,14 +83,6 @@ public class Mitarbeiter {
             default:
                 return true;
         }
-    }
-
-    public String createMitarbeiter(){
-        return mitarbeiterNr + ", " + nachname + ", " + vorname + ", Monate: " + arbeiterbelastung.size();
-    }
-
-    public String getID(){
-        return nachname+ "," + vorname + "," + mitarbeiterNr;
     }
 
     public String getKorrekturen() {

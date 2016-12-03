@@ -1,8 +1,8 @@
 package de.therazzerapp.abs.content.loader;
 
-import de.therazzerapp.abs.content.Mitarbeiter;
-import de.therazzerapp.abs.content.MonatType;
-import de.therazzerapp.abs.manager.MitarbeiterManager;
+import de.therazzerapp.abs.content.Employee;
+import de.therazzerapp.abs.content.MonthType;
+import de.therazzerapp.abs.manager.ErrorManager;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
  * @author The RaZZeR App <rezzer101@googlemail.com; e-mail@therazzerapp.de>
  * @since <version>
  */
-public class MitarbeiterLoader {
-    public static Set<Mitarbeiter> readContent(List<String> content){
+public class EmployeeLoader {
+    public static Set<Employee> readContent(List<String> content){
 
         String nachname = "";
         String vorname = "";
@@ -25,7 +25,7 @@ public class MitarbeiterLoader {
         int mitarbeiterNr = 0;
         Matcher matcher;
 
-        Set<Mitarbeiter> m = new LinkedHashSet<>();
+        Set<Employee> m = new LinkedHashSet<>();
 
         for (String s : content) {
 
@@ -57,65 +57,65 @@ public class MitarbeiterLoader {
             matcher = Pattern.compile("Industrieschutz Walter GmbH").matcher(s);
             if (matcher.find()){
 
-                Mitarbeiter duplicate = null;
-                Mitarbeiter mitarbeiter = new Mitarbeiter(nachname,vorname,mitarbeiterNr,formatBelastung(belastung,monate),korrekturen);
-                for (Mitarbeiter check : m) {
-                    if (Objects.equals(check.getID(), mitarbeiter.getID())){
+                Employee duplicate = null;
+                Employee employee = new Employee(nachname,vorname,mitarbeiterNr,formatBelastung(belastung,monate,mitarbeiterNr),korrekturen);
+                for (Employee check : m) {
+                    if (Objects.equals(check.getID(), employee.getID())){
                         duplicate = check;
                     }
                 }
                 if (duplicate != null){
                     m.remove(duplicate);
-                    m.add(new Mitarbeiter(nachname,vorname,mitarbeiterNr,mergeBelastung(mitarbeiter,duplicate),duplicate.getKorrekturen() + korrekturen));
+                    m.add(new Employee(nachname,vorname,mitarbeiterNr,mergeBelastung(employee,duplicate),duplicate.getKorrekturen() + korrekturen));
                     duplicate = null;
                 } else {
-                    m.add(mitarbeiter);
+                    m.add(employee);
                 }
                 korrekturen = "";
             }
         }
 
-        for (Mitarbeiter mitarbeiter : m) {
-            System.out.println(mitarbeiter.createMitarbeiter());
+        for (Employee employee : m) {
+            System.out.println(employee.createMitarbeiter());
         }
 
         return m;
     }
 
-    private static List<Map<MonatType, String>> mergeBelastung(Mitarbeiter m, Mitarbeiter n){
-        List<Map<MonatType, String>> mergedBelastung = new LinkedList<>();
-            for (MonatType monatType : MonatType.values()) {
-                if (monatType.equals(MonatType.ERROR) || monatType.equals(MonatType.MAERZ)){
+    private static List<Map<MonthType, String>> mergeBelastung(Employee m, Employee n){
+        List<Map<MonthType, String>> mergedBelastung = new LinkedList<>();
+            for (MonthType monthType : MonthType.values()) {
+                if (monthType.equals(MonthType.ERROR) || monthType.equals(MonthType.MAERZ)){
                     continue;
                 }
-                Map<MonatType, String> t = new HashMap<>();
-                if (m.hasMonth(monatType) && !n.hasMonth(monatType)){
-                    t.put(monatType,m.getMonthBelatungs(monatType));
+                Map<MonthType, String> t = new HashMap<>();
+                if (m.hasMonth(monthType) && !n.hasMonth(monthType)){
+                    t.put(monthType,m.getMonthBelatungs(monthType));
                     mergedBelastung.add(t);
-                } else if (!m.hasMonth(monatType) && n.hasMonth(monatType)){
-                    t.put(monatType,n.getMonthBelatungs(monatType));
+                } else if (!m.hasMonth(monthType) && n.hasMonth(monthType)){
+                    t.put(monthType,n.getMonthBelatungs(monthType));
                     mergedBelastung.add(t);
-                } else if (m.hasMonth(monatType) && n.hasMonth(monatType)){
-                    t.put(monatType,m.getMonthBelatungs(monatType));
+                } else if (m.hasMonth(monthType) && n.hasMonth(monthType)){
+                    t.put(monthType,m.getMonthBelatungs(monthType));
                     mergedBelastung.add(t);
                 }else {
-                    t.put(monatType, "0,0");
+                    t.put(monthType, "0,0");
                     mergedBelastung.add(t);
                 }
             }
         return mergedBelastung;
     }
 
-    private static List<Map<MonatType, String>> formatBelastung(String belastung, String monat){
-        List<Map<MonatType, String>> ab = new LinkedList<>();
+    private static List<Map<MonthType, String>> formatBelastung(String belastung, String monat, int mnr){
+        List<Map<MonthType, String>> ab = new LinkedList<>();
 
-        List<MonatType> monatTypeList = new LinkedList<>();
+        List<MonthType> monthTypeList = new LinkedList<>();
         for (String s : monat.split(" ")) {
             if (!s.isEmpty() || s.equals(" ")){
                 try {
-                    monatTypeList.add(MonatType.valueOf(s.toUpperCase()));
+                    monthTypeList.add(MonthType.valueOf(s.toUpperCase()));
                 } catch (IllegalArgumentException e){
-                    monatTypeList.add(MonatType.ERROR);
+                    monthTypeList.add(MonthType.ERROR);
                 }
             }
         }
@@ -127,13 +127,14 @@ public class MitarbeiterLoader {
             }
         }
 
-        if (monatTypeList.size() != belastungsList.size()){
-            //todo Error
+        if (monthTypeList.size() != belastungsList.size()){
+            ErrorManager.writeError("Employee: " + mnr + " hat eine ungülte Anzahl an Monaten");
         } else {
-            for (int i = 0; i < monatTypeList.size(); i++) {
-                Map<MonatType, String> temp = new LinkedHashMap<>();
-                temp.put(monatTypeList.get(i),belastungsList.get(i));
+            Map<MonthType, String> temp = new LinkedHashMap<>();
+            for (int i = 0; i < monthTypeList.size(); i++) {
+                temp.put(monthTypeList.get(i),belastungsList.get(i));
                 ab.add(temp);
+                ab.clear();
             }
         }
         return ab;

@@ -11,6 +11,19 @@ import java.net.URISyntaxException;
  */
 public class Utils {
 
+    public static String doubleToExcelString(double amount){
+        String t = amount + "";
+        return t.replaceAll("\\.",",");
+    }
+
+    public static double excelStringToDouble(String amount){
+        return Double.parseDouble(amount.replaceAll("\\.","").replaceAll(",","."));
+    }
+
+    /**
+     *
+     * @return
+     */
     public static boolean pdftotxtExists(){
         String path = null;
         try {

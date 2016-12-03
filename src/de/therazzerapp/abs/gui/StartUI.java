@@ -3,7 +3,7 @@ package de.therazzerapp.abs.gui;
 import de.therazzerapp.abs.ABS;
 import de.therazzerapp.abs.Utils;
 import de.therazzerapp.abs.filefilter.PDFFilter;
-import de.therazzerapp.abs.manager.MitarbeiterManager;
+import de.therazzerapp.abs.manager.EmployeeManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ public class StartUI {
                 ABS.run(chooser.getSelectedFile(), keepTXT.isSelected());
                 openPanel.setVisible(false);
                 infoPanel.setVisible(true);
-                mitarbeiterCount.setText(MitarbeiterManager.mitarbeiterSize() + "");
+                mitarbeiterCount.setText(EmployeeManager.getEmployeeSize() + "");
                 tableName.setText(chooser.getSelectedFile().getPath().replaceAll("\\.pdf",".csv"));
             }
         });

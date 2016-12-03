@@ -17,7 +17,7 @@ public class FileSaver {
             outputStreamWriter.write(content);
             outputStreamWriter.close();
 
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 }

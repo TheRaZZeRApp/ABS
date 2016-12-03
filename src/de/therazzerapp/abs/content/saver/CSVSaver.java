@@ -33,13 +33,13 @@ public class CSVSaver {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (String h : csvFile.getHeader()) {
-            stringBuilder.append(h + ";");
+            stringBuilder.append(h).append(";");
         }
         stringBuilder.replace(stringBuilder.length()-1,stringBuilder.length(),"\n");
 
         for (List<String> strings : csvFile.getContentList()) {
             for (String string : strings) {
-                stringBuilder.append(string + ";");
+                stringBuilder.append(string).append(";");
             }
             stringBuilder.replace(stringBuilder.length()-1,stringBuilder.length(),"\n");
         }
