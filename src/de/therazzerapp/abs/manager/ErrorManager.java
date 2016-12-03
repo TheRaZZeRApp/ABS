@@ -14,23 +14,23 @@ import java.util.List;
  */
 public class ErrorManager {
 
-    private static final String errorLog =
-            "Mitarbeiterbelastungs Skript Error Log:\n";
+    private static final StringBuilder errorLog = new StringBuilder("Mitarbeiterbelastungs Skript Error Log:\n");
 
     public static void writeError(String error){
-        saveError("Error: " + error + "\n");
+        errorLog.append("Error: " + error + "\n");
     }
 
     public static void writeError(List<String> errors){
-        StringBuilder sb = new StringBuilder();
-        sb.append(errorLog);
         for (String error : errors) {
-            sb.append("Error: " + error + "\n");
+            writeError(error);
         }
-        saveError(sb.toString());
     }
 
-    private static void saveError(String t){
-        FileSaver.save(t,new File(ABS.getArgs()[0] + "_ERROR.log"));
+    public static void saveError(String path){
+        FileSaver.save(errorLog.toString(),new File(path + "_ERROR.log"));
+    }
+
+    public static boolean isError(){
+        return errorLog.length() > 42;
     }
 }

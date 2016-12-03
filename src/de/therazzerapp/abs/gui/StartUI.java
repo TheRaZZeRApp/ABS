@@ -67,7 +67,7 @@ public class StartUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 chooser.showDialog(frame,null);
-                ABS.run(chooser.getSelectedFile(), keepTXT.isSelected());
+                ABS.run(chooser.getSelectedFile(), keepTXT.isSelected(), chooser.getSelectedFile().getAbsolutePath());
                 openPanel.setVisible(false);
                 infoPanel.setVisible(true);
                 mitarbeiterCount.setText(EmployeeManager.getEmployeeSize() + "");

@@ -49,11 +49,11 @@ public class ABS {
                 System.exit(0);
             }
 
-            run(file, keepTXT);
+            run(file, keepTXT, args[0]);
         }
     }
 
-    public static void run(File file, boolean keepTXT){
+    public static void run(File file, boolean keepTXT, String path){
 
         if (!file.getName().endsWith(".pdf")){
             System.out.println("\nError: Angegebene Datei ist keine PDF");
@@ -75,6 +75,10 @@ public class ABS {
 
         if (!keepTXT){
             txt.delete();
+        }
+
+        if (ErrorManager.isError()){
+            ErrorManager.saveError(path);
         }
     }
 
