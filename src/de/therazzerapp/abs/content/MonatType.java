@@ -6,7 +6,7 @@ package de.therazzerapp.abs.content;
  * @author The RaZZeR App <rezzer101@googlemail.com; e-mail@therazzerapp.de>
  * @since <version>
  */
-public enum MonthType {
+public enum MonatType {
 
     JANUAR("Januar"),
     FEBRUAR("Februar"),
@@ -26,7 +26,7 @@ public enum MonthType {
 
     private final String name;
 
-    MonthType(String name) {
+    MonatType(String name) {
         this.name = name;
     }
 

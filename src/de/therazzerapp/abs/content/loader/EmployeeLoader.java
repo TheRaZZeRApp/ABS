@@ -1,9 +1,8 @@
 package de.therazzerapp.abs.content.loader;
 
-import de.therazzerapp.abs.content.Mitarbeiter;
+import de.therazzerapp.abs.content.Employee;
 import de.therazzerapp.abs.content.MonatType;
 import de.therazzerapp.abs.manager.ErrorManager;
-import de.therazzerapp.abs.manager.MitarbeiterManager;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -15,8 +14,8 @@ import java.util.regex.Pattern;
  * @author The RaZZeR App <rezzer101@googlemail.com; e-mail@therazzerapp.de>
  * @since <version>
  */
-public class MitarbeiterLoader {
-    public static Set<Mitarbeiter> readContent(List<String> content){
+public class EmployeeLoader {
+    public static Set<Employee> readContent(List<String> content){
 
         String nachname = "";
         String vorname = "";
@@ -26,7 +25,7 @@ public class MitarbeiterLoader {
         int mitarbeiterNr = 0;
         Matcher matcher;
 
-        Set<Mitarbeiter> m = new LinkedHashSet<>();
+        Set<Employee> m = new LinkedHashSet<>();
 
         for (String s : content) {
 
@@ -58,32 +57,32 @@ public class MitarbeiterLoader {
             matcher = Pattern.compile("Industrieschutz Walter GmbH").matcher(s);
             if (matcher.find()){
 
-                Mitarbeiter duplicate = null;
-                Mitarbeiter mitarbeiter = new Mitarbeiter(nachname,vorname,mitarbeiterNr,formatBelastung(belastung,monate, mitarbeiterNr),korrekturen);
-                for (Mitarbeiter check : m) {
-                    if (Objects.equals(check.getID(), mitarbeiter.getID())){
+                Employee duplicate = null;
+                Employee employee = new Employee(nachname,vorname,mitarbeiterNr,formatBelastung(belastung,monate, mitarbeiterNr),korrekturen);
+                for (Employee check : m) {
+                    if (Objects.equals(check.getID(), employee.getID())){
                         duplicate = check;
                     }
                 }
                 if (duplicate != null){
                     m.remove(duplicate);
-                    m.add(new Mitarbeiter(nachname,vorname,mitarbeiterNr,mergeBelastung(mitarbeiter,duplicate),duplicate.getKorrekturen() + korrekturen));
+                    m.add(new Employee(nachname,vorname,mitarbeiterNr,mergeBelastung(employee,duplicate),duplicate.getKorrekturen() + korrekturen));
                     duplicate = null;
                 } else {
-                    m.add(mitarbeiter);
+                    m.add(employee);
                 }
                 korrekturen = "";
             }
         }
 
-        for (Mitarbeiter mitarbeiter : m) {
-            System.out.println(mitarbeiter.createMitarbeiter());
+        for (Employee employee : m) {
+            System.out.println(employee.createMitarbeiter());
         }
 
         return m;
     }
 
-    private static List<Map<MonatType, String>> mergeBelastung(Mitarbeiter m, Mitarbeiter n){
+    private static List<Map<MonatType, String>> mergeBelastung(Employee m, Employee n){
         List<Map<MonatType, String>> mergedBelastung = new LinkedList<>();
             for (MonatType monatType : MonatType.values()) {
                 if (monatType.equals(MonatType.ERROR) || monatType.equals(MonatType.MAERZ)){
