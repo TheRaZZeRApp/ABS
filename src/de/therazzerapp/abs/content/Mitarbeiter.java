@@ -53,6 +53,30 @@ public class Mitarbeiter {
         return arbeiterbelastung;
     }
 
+    public String getMonthBelatungs(MonatType month){
+        for (Map<MonatType, String> monatTypeStringMap : arbeiterbelastung) {
+            if (monatTypeStringMap.keySet().iterator().next() == month){
+                return monatTypeStringMap.get(month);
+            }
+        }
+        return "0,0";
+    }
+
+    public boolean hasMonth(MonatType month){
+        switch (getMonthBelatungs(month)){
+            case "":
+                return false;
+            case "0":
+                return false;
+            case "0.0":
+                return false;
+            case "0,0":
+                return false;
+            default:
+                return true;
+        }
+    }
+
     public String createMitarbeiter(){
         return mitarbeiterNr + ", " + nachname + ", " + vorname + ", Monate: " + arbeiterbelastung.size();
     }

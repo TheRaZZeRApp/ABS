@@ -56,7 +56,21 @@ public class MitarbeiterLoader {
 
             matcher = Pattern.compile("Industrieschutz Walter GmbH").matcher(s);
             if (matcher.find()){
-                m.add(new Mitarbeiter(nachname,vorname,mitarbeiterNr,formatBelastung(belastung,monate),korrekturen));
+
+                Mitarbeiter duplicate = null;
+                Mitarbeiter mitarbeiter = new Mitarbeiter(nachname,vorname,mitarbeiterNr,formatBelastung(belastung,monate),korrekturen);
+                for (Mitarbeiter check : m) {
+                    if (Objects.equals(check.getID(), mitarbeiter.getID())){
+                        duplicate = check;
+                    }
+                }
+                if (duplicate != null){
+                    m.remove(duplicate);
+                    m.add(new Mitarbeiter(nachname,vorname,mitarbeiterNr,mergeBelastung(mitarbeiter,duplicate),duplicate.getKorrekturen() + korrekturen));
+                    duplicate = null;
+                } else {
+                    m.add(mitarbeiter);
+                }
                 korrekturen = "";
             }
         }
@@ -66,6 +80,30 @@ public class MitarbeiterLoader {
         }
 
         return m;
+    }
+
+    private static List<Map<MonatType, String>> mergeBelastung(Mitarbeiter m, Mitarbeiter n){
+        List<Map<MonatType, String>> mergedBelastung = new LinkedList<>();
+            for (MonatType monatType : MonatType.values()) {
+                if (monatType.equals(MonatType.ERROR) || monatType.equals(MonatType.MAERZ)){
+                    continue;
+                }
+                Map<MonatType, String> t = new HashMap<>();
+                if (m.hasMonth(monatType) && !n.hasMonth(monatType)){
+                    t.put(monatType,m.getMonthBelatungs(monatType));
+                    mergedBelastung.add(t);
+                } else if (!m.hasMonth(monatType) && n.hasMonth(monatType)){
+                    t.put(monatType,n.getMonthBelatungs(monatType));
+                    mergedBelastung.add(t);
+                } else if (m.hasMonth(monatType) && n.hasMonth(monatType)){
+                    t.put(monatType,m.getMonthBelatungs(monatType));
+                    mergedBelastung.add(t);
+                }else {
+                    t.put(monatType, "0,0");
+                    mergedBelastung.add(t);
+                }
+            }
+        return mergedBelastung;
     }
 
     private static List<Map<MonatType, String>> formatBelastung(String belastung, String monat){

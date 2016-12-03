@@ -121,8 +121,9 @@
             </constraints>
             <properties>
               <enabled value="true"/>
+              <foreground color="-10658467"/>
               <selected value="false"/>
-              <text value="TXT Behalten"/>
+              <text value="Debug"/>
               <toolTipText value="Falls aktiviert, wird die beim umwandeln erstellte Textdatei nicht gelöscht."/>
             </properties>
           </component>

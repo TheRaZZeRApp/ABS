@@ -39,7 +39,7 @@ public class StartUI {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setSize(472,290);
-        frame.setTitle("ISW MB-Skript v." + ABS.getVersion() + " by Paul Koenig");
+        frame.setTitle("ISW MB-Skript v." + ABS.getVersion());
 
         URL resource1 = ABS.class.getResource( "images/icon_128.png" );
         frame.setIconImage(Toolkit.getDefaultToolkit().getImage(resource1));
