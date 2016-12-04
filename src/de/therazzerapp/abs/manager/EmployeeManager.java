@@ -2,7 +2,7 @@ package de.therazzerapp.abs.manager;
 
 import de.therazzerapp.abs.content.CSVFile;
 import de.therazzerapp.abs.content.Employee;
-import de.therazzerapp.abs.content.MonatType;
+import de.therazzerapp.abs.content.MonthType;
 import de.therazzerapp.abs.content.saver.CSVSaver;
 
 import java.util.*;
@@ -110,8 +110,8 @@ public class EmployeeManager {
         header.add("Nachname");
         header.add("Vorname");
         header.add("Pers.Nr.");
-        for (MonatType monthType : MonatType.values()) {
-            if (monthType == MonatType.ERROR || monthType == MonatType.MAERZ){
+        for (MonthType monthType : MonthType.values()) {
+            if (monthType == MonthType.ERROR || monthType == MonthType.MAERZ){
                 continue;
             }
             header.add(monthType.getName());
@@ -127,14 +127,18 @@ public class EmployeeManager {
             e.add(employee.getVorname());
             e.add(employee.getMNr() + "");
 
-            for (int i = 0; i < MonatType.values().length-2; i++) {
-                e.add("0");
+            for (int i = 0; i < MonthType.values().length-2; i++) {
+                e.add("0,0");
             }
 
-            for (Map<MonatType, String> monatTypeStringMap : employee.getArbeiterbelastung()) {
-                MonatType monthType = monatTypeStringMap.keySet().iterator().next();
+            for (Map<MonthType, String> monatTypeStringMap : employee.getArbeiterbelastung()) {
+                MonthType monthType = monatTypeStringMap.keySet().iterator().next();
                 int j = header.indexOf(monthType.getName());
-                e.set(j,monatTypeStringMap.values().iterator().next());
+                if (j > 0){
+                    e.set(j,monatTypeStringMap.values().iterator().next());
+                } else {
+                    e.add("Fehler bei: " + monatTypeStringMap.values().iterator().next());
+                }
             }
             e.add(employee.getKorrekturen());
             content.add(e);
@@ -143,7 +147,7 @@ public class EmployeeManager {
         CSVFile csvFile = new CSVFile(header,content);
         CSVSaver.save(csvFile,path);
 
-        System.out.println("Es wurden: " + content.size() + " Employee aufgelistet.");
+        System.out.println("Es wurden: " + content.size() + " Mitarbeiter aufgelistet.");
 
     }
 
@@ -162,7 +166,7 @@ public class EmployeeManager {
      * @param monthType
      * @return
      */
-    public static Set<Employee> getByFirstMonth(MonatType monthType){
+    public static Set<Employee> getByFirstMonth(MonthType monthType){
         Set<Employee> m = new LinkedHashSet<>();
         for (Employee employee : employees) {
             if (employee.getFirstMont().equals(monthType)){

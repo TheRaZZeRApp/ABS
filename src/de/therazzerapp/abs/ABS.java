@@ -18,7 +18,7 @@ import java.io.File;
  */
 public class ABS {
     private static String[] args;
-    private static String version = "0.1";
+    private final static String version = "0.1";
 
     public static String getVersion() {
         return version;
