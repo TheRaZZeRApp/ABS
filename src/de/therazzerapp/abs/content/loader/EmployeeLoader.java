@@ -26,6 +26,7 @@ public class EmployeeLoader {
         Matcher matcher;
 
         Set<Employee> m = new LinkedHashSet<>();
+        int dublicates = 0;
 
         for (String s : content) {
 
@@ -65,6 +66,7 @@ public class EmployeeLoader {
                     }
                 }
                 if (duplicate != null){
+                    dublicates++;
                     m.remove(duplicate);
                     m.add(new Employee(nachname,vorname,mitarbeiterNr,mergeBelastung(employee,duplicate),duplicate.getKorrekturen() + korrekturen));
                     duplicate = null;
@@ -78,6 +80,8 @@ public class EmployeeLoader {
         for (Employee employee : m) {
             System.out.println(employee.createMitarbeiter());
         }
+
+        System.out.println("Dopplungen: " + dublicates);
 
         return m;
     }
@@ -133,9 +137,16 @@ public class EmployeeLoader {
         } else {
             for (int i = 0; i < monthTypeList.size(); i++) {
                 Map<MonthType, String> temp = new LinkedHashMap<>();
+                if (mnr == 583){
+                    System.out.println(monthTypeList.get(i) + " , " + belastungsList.get(i));
+                }
+
                 temp.put(monthTypeList.get(i),belastungsList.get(i));
                 ab.add(temp);
             }
+        }
+        if (mnr == 583){
+            System.out.println(ab.size());
         }
         return ab;
     }

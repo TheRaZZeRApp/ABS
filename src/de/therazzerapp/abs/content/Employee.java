@@ -58,12 +58,19 @@ public class Employee {
     }
 
     public String getMonthBelatungs(MonthType month){
+        int i = 0;
+        int j = -1;
         for (Map<MonthType, String> monatTypeStringMap : arbeiterbelastung) {
             if (monatTypeStringMap.keySet().iterator().next() == month){
-                return monatTypeStringMap.get(month);
+                j = i;
             }
+            i++;
         }
-        return "0,0";
+        if ( j == -1){
+            return "0,0";
+        } else {
+            return arbeiterbelastung.get(j).values().iterator().next();
+        }
     }
 
     public String getID(){
