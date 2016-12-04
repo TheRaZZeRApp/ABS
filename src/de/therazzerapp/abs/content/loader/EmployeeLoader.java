@@ -137,16 +137,9 @@ public class EmployeeLoader {
         } else {
             for (int i = 0; i < monthTypeList.size(); i++) {
                 Map<MonthType, String> temp = new LinkedHashMap<>();
-                if (mnr == 583){
-                    System.out.println(monthTypeList.get(i) + " , " + belastungsList.get(i));
-                }
-
                 temp.put(monthTypeList.get(i),belastungsList.get(i));
                 ab.add(temp);
             }
-        }
-        if (mnr == 583){
-            System.out.println(ab.size());
         }
         return ab;
     }
